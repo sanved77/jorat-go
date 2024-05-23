@@ -5,13 +5,16 @@ import (
 	"net/http"
 
 	_ "github.com/lib/pq"
+	"github.com/sanved77/jorat-go/config"
 	"github.com/sanved77/jorat-go/internal/handler"
 	"github.com/sanved77/jorat-go/internal/storage"
 )
 
 func main() {
 
-	const PORT = ":7926"
+	config.Init()
+
+	PORT := config.GetString("server.PORT")
 
 	db := storage.DBConnect()
 	defer db.Close()
