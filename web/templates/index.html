@@ -1,10 +1,195 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jor.at - जोरात</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1, h3 {
+            font-family: "Montserrat", sans-serif;
+            font-optical-sizing: auto;
+        }
+
+        h1 {
+            font-weight: 600;
+            font-size: 100px;
+            font-style: normal;
+            margin: 100px 0 0;
+        }
+
+        h3 {
+            font-weight: 400;
+            font-size: 20pxpx;
+        }
+
+        form label{
+            display: inline-block;
+            width: 200px;
+            font-family: "Montserrat", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 30px;
+        }
+        form input{
+            height: 60px;
+            width: 465px;
+            margin: 8px 8px;
+        }
+        form input[type="text"]{
+            font-size:24px;
+        }
+
+        form button {
+            background-color: #336699;
+            border: none;
+            border-radius: 5px;
+            height: 60px;
+            font-size: 20px;
+            width: 100px;
+            color: white;
+        }
+
+        #modal {
+            display: none;
+            position: absolute;
+            padding: 0 8px;
+            width: 65vw;
+            height: 100px;
+            bottom: 50px;
+            border-radius: 10px;
+            font-size: 30px;
+            font-weight: 600;
+            font-family: "Montserrat", sans-serif;
+            color: white;
+        }
+
+        #modal.active {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #modal.success {
+            background: #84D878;
+            border: 5px solid #426c3c;
+        }
+        #modal.warning {
+            background: #FFD966;
+            border: 5px solid #bca86c;
+        }
+        #modal.error {
+            background: #FF6565;
+            border: 5px solid #993c3c;
+        }
+
+        @media (max-width:500px) {
+            form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            form label { 
+                width: unset;
+                padding: 8px 0;
+            }
+            form input{
+                height: 30px;
+                width: 70vw;
+            }
+            #modal {
+                width: 80vw;
+                font-size: 20px;
+                height: 110px;
+            }
+        }
+        @media (min-width:501px) {
+            form button {
+                margin-top: 20px;
+                margin-left: 212px;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script>
+        const SUCCESS = 'success';
+        const WARN = 'warning';
+        const ERROR = 'error';
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('urlForm');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const shortUrl = document.getElementById('shortUrl').value;
+                let longUrl = document.getElementById('longUrl').value;
+                if (longUrl.indexOf("http://") !== 0 && longUrl.indexOf("https://") !== 0) {
+                    longUrl = `http://${longUrl}`;
+                }
+                fetch('/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ short: shortUrl, long_url: longUrl })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const { statusCode } = data;
+                    if (statusCode === 200) {
+                        showMessage("Short url created - jor.at/" + shortUrl, SUCCESS);
+                    } else if(statusCode === 406) {
+                        showMessage("Bad json" + shortUrl, ERROR);
+                    } else if(statusCode === 400) {
+                        showMessage("Bad request" + shortUrl, WARN);
+                    } else if(statusCode === 409) {
+                        showMessage("Short code already in use" + shortUrl, WARN);
+                    } else if(statusCode === 500) {
+                        showMessage("Server error" + shortUrl, ERROR);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            });
+        });
+
+        function showMessage(msg, type) {
+            const modal = document.getElementById('modal');
+            modal.innerHTML = msg;
+
+            modal.classList.add("active", type);
+
+            setTimeout(() => {
+                modal.classList.remove("active", type);
+            }, 3000)
+        }
+    </script>
 </head>
 <body>
-    fakasta जोरात dhuski mara
+    <h1>Jor.at</h1>
+    <h3>Shorten a link</h3>
+    <form id="urlForm">
+        <label for="shortUrl">Short URL:</label>
+        <input type="text" id="shortUrl" name="shortUrl" required><br>
+        <label for="longUrl">Long URL:</label>
+        <input placeholder="http://" type="text" id="longUrl" name="longUrl" required><br>
+        <button type="submit">Create</button>
+    </form>
+    
+    <div id="modal">
+        henlo ji
+    </div>
 </body>
 </html>
