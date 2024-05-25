@@ -14,7 +14,7 @@ var k = koanf.New(".")
 // Init loads configuration using Koanf into the global 'k' instance.
 func Init() {
 	// Load JSON config
-	if err := k.Load(file.Provider("/root/Code/jorat-go/config/config.json"), json.Parser()); err != nil {
+	if err := k.Load(file.Provider("/var/www/jor.at/config.json"), json.Parser()); err != nil {
 		log.Fatalf("error loading config: %v", err)
 	}
 

@@ -150,11 +150,11 @@
                     if (statusCode === 200) {
                         showMessage("Short url created - jor.at/" + shortUrl, SUCCESS);
                     } else if(statusCode === 406) {
-                        showMessage("Bad json" + shortUrl, ERROR);
+                        showMessage("Bad json", ERROR);
                     } else if(statusCode === 400) {
-                        showMessage("Bad request" + shortUrl, WARN);
+                        showMessage("Bad request", WARN);
                     } else if(statusCode === 409) {
-                        showMessage("Short code already in use" + shortUrl, WARN);
+                        showMessage("Short code already in use - " + shortUrl, WARN);
                     } else if(statusCode === 500) {
                         showMessage("Server error" + shortUrl, ERROR);
                     }

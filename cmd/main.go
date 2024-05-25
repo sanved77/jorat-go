@@ -21,7 +21,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
-			http.ServeFile(w, r, "web/templates/index.html")
+			http.ServeFile(w, r, "/var/www/jor.at/index.html")
 			return
 		}
 		handler.Redirect(w, r, db)
